@@ -23,3 +23,7 @@ plt.legend()
 plt.xlabel('x')
 plt.ylabel('y')
 plt.show()
+
+# Linear interpolation is straightforward and computationally inexpensive. It's a good choice as a quick and simple method and provides a reasonable approximation.
+# For small datasest with relatively linear behavior between points, linear interpolation is often sufficient.
+# If the data is monotonic and we need to preserve this property, linear interpolation is suitable since it won't introduce oscillations.
