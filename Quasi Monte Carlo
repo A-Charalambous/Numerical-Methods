@@ -1,0 +1,48 @@
+import numpy as np
+from scipy.stats import norm
+from scipy.stats import qmc
+
+# Monte Carlo integration using Sobol sequences (Quasi Monte Carlo QMC). To integrate a 2 dimensional domain.
+
+# QMC methods use deterministic sequences that are designed to cover the integration domain more uniformly.
+# Unlike traditional Monte Carlo methods, which rely on random sampling.
+# QMC methods minimize the largest gap between sampled points and ensure they are evenly distributed.
+# QMC methods often converge faster than traditional Monte Carlo methods, especially in higher dimensions.
+# QMC methods often have greater efficiency and accuracy than traditional Monte Carlo methods
+
+
+# func: The function to integrate.
+# n:  The number of points to use.
+# lb: Lower boundary of the integration domain. Note that this is an array in 2 dimensions. It's not a scalar value.
+# ub: Upper boundary of the integration domain. Note that this is an array in 2 dimensions. It's not a scalar value.
+# By specifying the lower bound (lb) and upper bound (ub), we can scale and shift the generated Sobol sequence points to cover only the desired
+# integration domain. This ensures that the points are generated within the specified bounds, and not outside.
+
+def monte_carlo_sobol(func, n, lb, ub):
+    dim = len(lb) # The dimensionality of the sequence refers to the number of dimensions in which we are generating points.
+                  # If we are integrating a function over a 2-dimensional space (e.g. [0,0]×[1,1] ), then the dimensionality of the Sobol sequence is 2.
+    sampler = qmc.Sobol(d=dim, scramble=True) # Scrambling introduces controlled randomness and can improve the uniformity of the sequence, leading to better integration results.
+    points = sampler.random(n)
+    points = lb + (ub - lb) * points  # Scale points to the integration domain
+    fx = func(points)  # Evaluate the function at the generated points
+    volume = np.prod(ub - lb)  # Volume of the integration domain. It calculates the length of the interval in each dimension,
+                               # and then multiply them to find the volume. 
+                               # e.g. volume = np.prod([1 - 0, 1 - 0]) , hence: np.prod([1, 1]) = 1 * 1 = 1 (The volume of a cell sized 1x1 is 1).
+
+    return volume * np.mean(fx)  # Estimate the integral
+
+# Example function: 2-dimensional Gaussian PDF
+def gaussian_pdf(x):
+    return norm.pdf(x[:, 0]) * norm.pdf(x[:, 1]) # As an example. the product of the PDFs represents the joint distribution of a 
+                                                 # 2-dimensional Gaussian function.
+
+# Integration domain bounds
+lower_bound = np.array([0, 0])
+upper_bound = np.array([1, 1])
+
+# Number of points for integration
+num_points = 16384  #this needs to be a power of 2, otherwise the sobol function throws a warning.
+
+# Estimate the integral using Sobol sequences
+integral_estimate = monte_carlo_sobol(gaussian_pdf, num_points, lower_bound, upper_bound)
+print("Estimated integral using Sobol sequences:", integral_estimate)
