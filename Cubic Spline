@@ -25,3 +25,9 @@ plt.plot(x_plot, y_plot, label='Cubic Spline', color='blue') # Cubic splines sho
 plt.title('Cubic Spline Interpolation')
 plt.legend()
 plt.show()
+
+
+# Cubic interpolation provides a smoother curve compared to linear interpolation, which is beneficial when the underlying data is expected to be smooth.
+# When higher accuracy is needed, cubic interpolation can provide better estimates by considering the curvature of the data.
+# It is beneficial when dealing with larger datasets where the relationships between data points are more complex.
+# For data that exhibits non-linear behavior between points, cubic interpolation can better capture the variations, compared to linear interpolation.
