@@ -1,0 +1,25 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.interpolate import interp1d
+
+# Assume that the change between the two points is linear and use this assumption to find the intermediate value.
+
+# Given data points
+x = np.array([1, 2, 3, 4])
+y = np.array([1, 3, 2, 4])
+
+# Create a linear interpolator
+linear_interpolator = interp1d(x, y, kind='linear')
+
+# Generate points to plot the interpolation
+x_plot = np.linspace(1, 4, 100) # 100 points between the values of 1 to 4.
+y_plot = linear_interpolator(x_plot)
+
+# Plot the results
+plt.scatter(x, y, color='red', label='Data points')
+plt.plot(x_plot, y_plot, label='Linear Interpolation', color='blue')
+plt.title('Linear Interpolation using SciPy')
+plt.legend()
+plt.xlabel('x')
+plt.ylabel('y')
+plt.show()
